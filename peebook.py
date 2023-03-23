@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+import ebooklib
+from ebooklib import epub
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
     QApplication,
@@ -59,19 +61,19 @@ class Peebook(QMainWindow):
         toolbar.addAction(exit_action)
 
         # creates the QListWidget
-        lista = QListWidget()
-        lista.setStyleSheet(
+        self.lista = QListWidget()
+        self.lista.setStyleSheet(
             """
         background-color: #262626;
         color: #FFFFFF;
         """
         )
-        lista.setMinimumWidth(60)
-        lista.addItem("Item 1")
-        lista.addItem("Item 2")
-        lista.addItem("Item 3")
+        self.lista.setMinimumWidth(60)
+        self.lista.addItem("Item 1")
+        self.lista.addItem("Item 2")
+        self.lista.addItem("Item 3")
         # lista.currentItemChanged.connect(lambda item: texto.setText(item.text()))
-        lista.itemClicked.connect(lambda item: self.texto.setText(item.text()))
+        self.lista.itemClicked.connect(lambda item: self.texto.setText(item.text()))
         # layout.addWidget(lista)
 
         # creates the QTextEdit
@@ -81,7 +83,7 @@ class Peebook(QMainWindow):
 
         # Cria o Splitter
         mySplitter = QSplitter()
-        mySplitter.addWidget(lista)
+        mySplitter.addWidget(self.lista)
         mySplitter.addWidget(self.texto)
         mySplitter.setStretchFactor(0, 2)
         mySplitter.setStretchFactor(1, 8)
@@ -101,10 +103,13 @@ class Peebook(QMainWindow):
             "ePub files (*.epub);;Amazon Kindle files (*.azw);;PDF files (*.pdf)",
         )
         if fname[0]:
-            f = open(fname[0], "r")
-            with f:
-                data = f.read()
-                self.texto.setText(data)
+            with open(fname[0], "r") as f:
+                book = epub.read_epub(f.name)
+            self.statusbar.showMessage(f.name)
+            for item in book.get_items():
+                if item.get_type() == ebooklib.ITEM_DOCUMENT:
+                    chapter_title = book.get_item_with_id(item.get_id()).get_title()
+                    self.lista.addItem(chapter_title)
 
 
 if __name__ == "__main__":
@@ -112,10 +117,10 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # creates the window
-    janela = Peebook()
+    peebookwindow = Peebook()
 
     # shows the window
-    janela.show()
+    peebookwindow.show()
 
     # executes the application
     sys.exit(app.exec())
