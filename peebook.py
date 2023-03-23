@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (
 )
 
 
-class MinhaJanela(QMainWindow):
+class Peebook(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -95,7 +95,10 @@ class MinhaJanela(QMainWindow):
     def open_file(self):
         home_dir = str(Path.home())
         fname = QFileDialog.getOpenFileName(
-            self, "Open file", home_dir, ["*.epub", "*.azw", "*.mobi", "*.pdf"]
+            self,
+            "Open file...",
+            home_dir,
+            "ePub files (*.epub);;Amazon Kindle files (*.azw);;PDF files (*.pdf)",
         )
         if fname[0]:
             f = open(fname[0], "r")
@@ -109,7 +112,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # creates the window
-    janela = MinhaJanela()
+    janela = Peebook()
 
     # shows the window
     janela.show()
