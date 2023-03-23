@@ -1,7 +1,6 @@
 import sys
 from pathlib import Path
 
-import ebooklib
 from ebooklib import epub
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
@@ -9,6 +8,7 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
     QListWidget,
+    QListWidgetItem,
     QMainWindow,
     QSplitter,
     QTextEdit,
@@ -62,16 +62,14 @@ class Peebook(QMainWindow):
 
         # creates the QListWidget
         self.lista = QListWidget()
-        self.lista.setStyleSheet(
-            """
-        background-color: #262626;
-        color: #FFFFFF;
-        """
-        )
+        # self.lista.setStyleSheet(
+        #    """
+        # background-color: #262626;
+        # color: #FFFFFF;
+        # """
+        # )
         self.lista.setMinimumWidth(60)
-        self.lista.addItem("Item 1")
-        self.lista.addItem("Item 2")
-        self.lista.addItem("Item 3")
+
         # lista.currentItemChanged.connect(lambda item: texto.setText(item.text()))
         self.lista.itemClicked.connect(lambda item: self.texto.setText(item.text()))
         # layout.addWidget(lista)
@@ -106,10 +104,12 @@ class Peebook(QMainWindow):
             with open(fname[0], "r") as f:
                 book = epub.read_epub(f.name)
             self.statusbar.showMessage(f.name)
-            for item in book.get_items():
-                if item.get_type() == ebooklib.ITEM_DOCUMENT:
-                    chapter_title = book.get_item_with_id(item.get_id()).get_title()
-                    self.lista.addItem(chapter_title)
+            self.lista.clear()
+            for item in book.toc:
+                list_item = QListWidgetItem(item.title)
+                self.lista.addItem(list_item)
+                # print(item.title)
+                # self.lista.addItem(title)
 
 
 if __name__ == "__main__":
