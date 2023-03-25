@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 from ebooklib import epub
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction, QCloseEvent
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QMainWindow,
+    QMessageBox,
     QSplitter,
     QTextEdit,
     QToolBar,
@@ -113,6 +114,20 @@ class Peebook(QMainWindow):
                 print(f"Book chapter UID: {item.title}")
                 print(f"Book chapter title: {item.uid}")
                 # self.lista.addItem(title)
+
+    def closeEvent(self, event: QCloseEvent):
+        reply = QMessageBox.question(
+            self,
+            "Message",
+            "Are you sure you want to quit?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No,
+        )
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
 
 if __name__ == "__main__":
