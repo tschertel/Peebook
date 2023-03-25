@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 from ebooklib import epub
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtGui import QAction
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
@@ -40,7 +40,7 @@ class Peebook(QMainWindow):
         self.addToolBar(toolbar)
 
         # ceates the actions
-        openFile = QAction(QIcon("open.png"), "Open", self)
+        openFile = QAction("Open", self)
         openFile.setStatusTip("Opens ebook file")
         openFile.triggered.connect(self.open_file)
 
@@ -50,7 +50,7 @@ class Peebook(QMainWindow):
         down_sync = QAction("Download", self)
         down_sync.setStatusTip("Sync down from dropbox ")
 
-        exit_action = QAction(QIcon("exit.png"), "Exit", self)
+        exit_action = QAction("Exit", self)
         exit_action.setStatusTip("Exit the application")
         exit_action.triggered.connect(QApplication.instance().quit)
 
@@ -105,10 +105,13 @@ class Peebook(QMainWindow):
                 book = epub.read_epub(f.name)
             self.statusbar.showMessage(f.name)
             self.lista.clear()
+            print(dir(book))
             for item in book.toc:
-                list_item = QListWidgetItem(item.title)
-                self.lista.addItem(list_item)
-                # print(item.title)
+                if item.title:
+                    list_item = QListWidgetItem(item.title)
+                    self.lista.addItem(list_item)
+                print(f"Book chapter UID: {item.title}")
+                print(f"Book chapter title: {item.uid}")
                 # self.lista.addItem(title)
 
 
