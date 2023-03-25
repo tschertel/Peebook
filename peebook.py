@@ -23,7 +23,7 @@ class Peebook(QMainWindow):
         super().__init__()
         self.version = "0.1"
         # sets main window config
-        self.setWindowTitle("Peebook")
+        self.setWindowTitle(f"Peebook v{self.version}")
         self.setGeometry(100, 100, 800, 600)
 
         # sets main widget config
