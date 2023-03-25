@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (
 class Peebook(QMainWindow):
     def __init__(self):
         super().__init__()
-
+        self.version = "0.1"
         # sets main window config
         self.setWindowTitle("Peebook")
         self.setGeometry(100, 100, 800, 600)
@@ -49,7 +49,14 @@ class Peebook(QMainWindow):
         up_sync.setStatusTip("Sync up with dropbox")
 
         down_sync = QAction("Download", self)
-        down_sync.setStatusTip("Sync down from dropbox ")
+        down_sync.setStatusTip("Sync down from dropbox")
+
+        config_action = QAction("Config", self)
+        config_action.setStatusTip("Set configuration")
+
+        about_action = QAction("About", self)
+        about_action.setStatusTip("Show about message")
+        about_action.triggered.connect(self.displayAboutInfo)
 
         exit_action = QAction("Exit", self)
         exit_action.setStatusTip("Exit the application")
@@ -59,6 +66,8 @@ class Peebook(QMainWindow):
         toolbar.addAction(openFile)
         toolbar.addAction(up_sync)
         toolbar.addAction(down_sync)
+        toolbar.addAction(config_action)
+        toolbar.addAction(about_action)
         toolbar.addAction(exit_action)
 
         # creates the QListWidget
@@ -128,6 +137,25 @@ class Peebook(QMainWindow):
             event.accept()
         else:
             event.ignore()
+
+    def displayAboutInfo(self):
+        """
+        Construct message about when Help->About is clicked
+        """
+
+        aboutBox = QMessageBox()
+        aboutBox.setIcon(QMessageBox.Information)
+        aboutBox.setWindowTitle("About")
+        # aboutBox.setWindowIcon(QIcon("icon.ico"))
+        aboutBox.setText(
+            f"Peebook v{self.version}\
+            \n\nPeebook is a ebook reader that has some Moonreader+ features.\
+            \n\nRight now only Dropbox is supported.\
+            \n\nRepo: https://github.com/tschertel/PPeebook \
+            \nThis program is distributed for free under the terms of the GNU General Public License v3"
+        )
+
+        aboutBox.exec()
 
 
 if __name__ == "__main__":
